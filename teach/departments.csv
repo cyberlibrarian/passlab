@@ -1,0 +1,13 @@
+department,criticality
+"Executive Office",high
+"Clerical and IT",high
+"Software Development",medium
+"Merchant Banking",high
+"Trading Floor",high
+"Retail Banking",low
+"Small Business Banking",low
+"Credit Cards",low
+"Securities",low
+"Wealth Management",medium
+"Research",medium
+"Derivatives Trading",medium

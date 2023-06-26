@@ -6,9 +6,11 @@ The labs in this excercise are based on a fictional company. Knowing the company
 [Traders Episode Guide](https://www.tvmaze.com/shows/8845/traders/episodeguide)
 [Traders Wikipedia Page](https://en.wikipedia.org/wiki/Traders_(TV_series))
 
-## The Business: Gardner Ross, Investment Bank
+## The Business: Federated Dundas
 
-Gardner Ross is a small Canadian investment bank that is somewhat profitable, but often faces a takeover by a larger institution due to its inability to compete in a global marketplace. Crisis strikes when senior partner Cedric Ross is jailed after money goes missing from an initial public offering. Fearing that his partner Adam Cunningham will take advantage of his absence to agree to a friendly takeover by a larger bank, he calls on his only child, Sally, to take care of his interests in his absence. Meanwhile, hotshot trader Jack Larkin is looking to break into investment banking and approaches Adam, who agrees to allow Larkin to join the firm if he can land another IPO. Jack undercuts a rival bank and wins the IPO, but as the investment syndicate falls through, Gardner Ross finds itself responsible for most of the underwriting of the issue, and if the sale goes poorly, faces the loss of all of its investment capital. Luckily, head trader Marty Stephens saves the day by making a large profit for the bank selling the issue into a cool market.
+Gardner Ross was a small Canadian investment bank that was somewhat profitable, but often faced a takeover by a larger institution due to its inability to compete in a global marketplace. It was taken over by Federated Dundas, a much larger and often corrupt competitor. 
+
+After senior partner Cedric Ross wass jailed after money went missing from an initial public offering (IPO). Fearing that his partner Adam Cunningham will take advantage of his absence to agree to a friendly takeover by a larger bank, he calls on his only child, Sally, to take care of his interests in his absence. Meanwhile, hotshot trader Jack Larkin is looking to break into investment banking and approaches Adam, who agrees to allow Larkin to join the firm if he can land another IPO. Jack undercuts a rival bank and wins the IPO, but as the investment syndicate falls through, Gardner Ross finds itself responsible for most of the underwriting of the issue, and if the sale goes poorly, faces the loss of all of its investment capital. Luckily, head trader Marty Stephens saves the day by making a large profit for the bank selling the issue into a cool market.
 
 The three major players each have different agendas. Sally wishes both to keep the bank independent and to solidify her control of the bank despite her lack of experience. Adam wants to steer a safe course that will bring consistent but relatively low returns on capital. Jack seeks outgrowth at any cost seeking bigger and bigger deals, culminating in a $1 billion financing of a harbour project. This infuriates Marty who sees the plans of the investment bankers stealing capital away from his consistently profitable trading while putting him under pressure to bring more capital into the bank.
 
@@ -41,11 +43,21 @@ The bank is once again thrown into crisis when Sally is diagnosed with cancer an
 - Cathy
 - Ann Krywarick
 
-### Investment Department
+### Merchant Bank
 
 ### Derivatives Department
 
-### Analysts
+### Insurance Subsidary
+
+### Retail Banking
+
+### Credit Cards
+
+### Wealth Management
+
+### Securities 
+
+### Research
 
 ### Clerical and I.T.
 

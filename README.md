@@ -41,14 +41,14 @@ To do this we will use the *office2john.py* script that comes with John the Ripp
 This is a simple lesson. This is all you have to do:
 
 ```
-~/john/run/office2john.py file.docx > file.hash
-cat file.hash
+~/john/run/office2john.py ~/passlab/lab1a.docx > ~/passlab/lab1a-word
+cat ~/passlab/lab1b.hash
 ```
 
 The output will look like this:
 
 ```
-file.docx:$office$*2013*100000*256*16:hash
+lab1a.docx:$office$*2013*100000*256*16:hash
 ```
 
 That is the hash you have to crack. Note that it tells you what version of Office made this file, and some of the technical details about the hashing algorithm. These are needed by hash cracking programs like *John the Ripper* and *hashcat*. 
@@ -59,8 +59,8 @@ In this example "2013" is the version of the Office document format. "100,000" i
 Another common encrypted format is PDF. Like MS Office, in the old days, the password protection on PDF was weak: there was no encryption at all. Today, it is strong and cracking it is a challenge. To extract the hash, we will use another program from *John the Ripper*:
 
 ```
-~/john/run/pdf2john.pl file.pdf > file.hash
-cat file.hash
+~/john/run/pdf2john.pl ~/passlab/lab1b.pdf > ~/passlab/lab1b-pdf
+cat ~/passlab/lab1b.hash
 ```
 
 ### Excercise 1c: Extracting hashes from Active Directory
@@ -86,11 +86,7 @@ Earlier we learned how to extract hashes from encrypted MS Office documents. If 
 [Extracting Hashes from Password Protected Microsoft Office Documents](https://medium.com/@klockw3rk/extracting-hash-from-password-protected-microsoft-office-files-b206438944d2)
 
 ```
-./hashcat.bin -m 9600 -o file.txt hash.txt wordlist.txt
-```
-
-```
-./hashcat.bin -m 9600 -o file.txt hash.txt wordlist.txt
+~/hashcat/hashcat.bin -O -w 4 -m 9600 ~/passlab/lab1a-word ~/words/rockyou.txt.gz
 ```
 
 #### PDF Hashes
@@ -99,7 +95,7 @@ PDF hashes using "10500".
 [Cracking PDF Hashes](https://nicholaslyz.com/blog-posts/2021-07-23-cracking-pdf-hashes/)
 
 ```
-./hashcat.bin -m 10500 -o file.txt hash.txt wordlist.txt
+~/hashcat/hashcat.bin -O -w 4 -m 10500 ~/passlab/lab1b-pdf ~/words/rockyou.txt.gz
 ```
 
 ### NTLM hashes
@@ -108,7 +104,7 @@ NTLM hashes are extremely popular due to how weak they are and how pervasive the
 NTLM extracted from AD is "1000". There are other ways to capture NTLM credentials including those cached on workstations or sniffed on the network. Those have different formats.
 
 ```
-./hashcat.bin -m 1000 -o file.txt --username hash.txt wordlist.txt
+~/hashcat/hashcat.bin -O -w 4 -m 1000 --username ~/passlab/lab2-ntlm ~/words/rockyou.txt.gz
 ```
 
 Importantly, we have to add "--username" when we crack AD NTLM hashes. Unlike MS Office or PDF documents, accounts have usernames and these will be in the file with multiple hashes. If you do not add "--username" you will get an error.
@@ -124,7 +120,7 @@ Our hashes are in the file "lab1.txt".
 The rockyou file is in "rockyou.txt.gz"
 
 ```
-./hashcat.bin -O -w 4 -m 1000 --username lab1.txt rockyou.txt.gz
+~/hashcat/hashcat.bin -O -w 4 -m 1000 --username ~/passlab/lab2-ntlm ~/words/rockyou.txt.gz
 ```
 
 This will only take a few minutes. How many did we get?
@@ -146,6 +142,42 @@ I would advise against using the new "rockyou2021" list is not a good representa
 ### Excercise 2c: Brute-force Guessing ("Mask Attacks")
 The simplest method of guessing passwords is *brute-force*: guessing all possible combinations of characters, digits, and symbols.
 
+Hashcat has a pattern language for performing brute-force attacks. [Mask Attack](https://hashcat.net/wiki/doku.php?id=mask_attack)
+
+- ?l = abcdefghijklmnopqrstuvwxyz
+- ?u = ABCDEFGHIJKLMNOPQRSTUVWXYZ
+- ?d = 0123456789
+- ?h = 0123456789abcdef
+- ?H = 0123456789ABCDEF
+- ?s = «space»!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~
+- ?a = ?l?u?d?s
+- ?b = 0x00 - 0xff
+
+You can also define custom character set with *-1=*, *-2=* etc. For example if we want thought that the password matched a serial number for a Cisco Cable Modem, we might assume the 4 position is a "T" or  "D". Then we can use:
+
+```
+-1 TD
+```
+
+To guess all 10 character passwords starting with an upper letter, followed by lowercase letters, and ending in a date followed by punctuation like "Hello2023!" or "Pasta1999#" or "Gbgbg1234@"
+
+```
+~/hashcat/hashcat.bin -O -w 4 -m 1000 --username -a 3 ?u?l?l?l?l?d?d?d?d?s ~/passlab/lab2-ntlm
+```
+
+You can search for ALL passwords from 1 character to 7 with this:
+
+```
+~/hashcat/hashcat.bin -O -w 4 -m 1000 --username -a 3 --increment ?a?a?a?a?a?a?a ~/passlab/lab2-ntlm
+```
+
+If you want to include non-printable ASCII (all binary), you can use this. It will catch passwords with French characters for example but take much longer:
+
+```
+~/hashcat/hashcat.bin -O -w 4 -m 1000 --username -a 3 --increment ?b?b?b?b?b?b?b ~/passlab/lab2-ntlm
+```
+
+To make effective use of this kind of brute-force attack you need to do some research. Are the passwords going to be short? Will they be based on serial numbers? Do you know anything about other passwords choosen by the employee (check leaks of social media they use).
 
 ### Excercise 2d: Guessing with Rules  ("Mangling Attacks")
 Using "word mangling rules" is highly effective and fast. It is much more effective than a normal dictionary attack, and far faster than a "mask" attack. I recommend this as a starting point.
@@ -159,13 +191,13 @@ Other rules will add numbers, dates, or common puntuation to a word. Common patt
 To run a rule attack we use mode "0" and have to specify a rule file and a wordlist.
 
 ```
-hashcat.bin -O -m 1000 --username -a 0 -r rules/best64.rule ntlm.txt words/rockyou.txt.gz
+~/hashcat/hashcat.bin -O -w 4 -m 1000 --username -a 0 -r ~/hashcat/rules/best64.rule lab2-ntlm ~/words/rockyou.txt.gz
 ```
 
 #### Rules that come with Hashcat
-In hashcat, the "rules" folder contains a great base set of rules. Each does something different.
+In hashcat, the "rules" folder contains a great base set of rules. Each does something different. I recommend trying them out, they don't take long if you use the rockyou list and they will each find different types of passwords.
 
-Listed from biggest to smallest ruleset
+Listed from biggest to smallest ruleset:
 
 - dive.rule
 - generated2.rule
@@ -201,7 +233,6 @@ Listed from biggest to smallest ruleset
 - NSA Rules
 - Hob0Rules
 
-
 ### Excercise 2e: Statistical Guessing Models ("Markov Attack")
 Markov chains are statistical models trained on existing data. In this case the data are previous leaked passwords. We assume that leaked password are representative of passwords choosen by regular humans. The markov model identifies the most common patterns in *normal passwords*.
 
@@ -210,13 +241,16 @@ Hashcat comes with a pre-trained model, but we can train our own model if we hav
 The markov model simply creates mask patterns similar to what we saw in previous methods. It narrows down how many guesses we need to make. For short human created passwords, it is excellent and FAST. I usually try this up to 8 characters as a first or second attack. For long passwords or slow algorithms, other more advanced methods are better, but I will run this as my last attempt and let it run for a week or longer.
 
 ```
-hashcat.bin -O -w 4 -a 3 -m 1000 --username lab1.txt
+~/hashcat/hashcat.bin -O -w 4 -m 1000 --username -a 3 lab2-ntlm
 ```
 
-Everything up to 8 chars will take about 10 minutes
+While this is running you can hit "b" for bypass to skip to the next pattern predicted by the Markov model. This is helpful for estimating how long each length of password will take to guess. 
 
-The next 9 chars will take 6 hours
-The next 10 chars will take 10 days
+For a AWS EC2 g4dn.xlarge with a single Telsa T4 GPU:
+
+- Everything up to 8 chars will take about 10 minutes
+- The next 9 chars will take 6 hours
+- The next 10 chars will take 10 days
 
 ## Section 3: Challenges
 

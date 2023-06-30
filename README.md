@@ -42,7 +42,7 @@ This is a simple lesson. This is all you have to do:
 
 ```
 ~/john/run/office2john.py ~/passlab/lab1a.docx > ~/passlab/lab1a-word
-cat ~/passlab/lab1b.hash
+cat ~/passlab/lab1b-word
 ```
 
 The output will look like this:
@@ -60,7 +60,7 @@ Another common encrypted format is PDF. Like MS Office, in the old days, the pas
 
 ```
 ~/john/run/pdf2john.pl ~/passlab/lab1b.pdf > ~/passlab/lab1b-pdf
-cat ~/passlab/lab1b.hash
+cat ~/passlab/lab1b-pdf
 ```
 
 ### Excercise 1c: Extracting hashes from Active Directory
@@ -86,7 +86,7 @@ Earlier we learned how to extract hashes from encrypted MS Office documents. If 
 [Extracting Hashes from Password Protected Microsoft Office Documents](https://medium.com/@klockw3rk/extracting-hash-from-password-protected-microsoft-office-files-b206438944d2)
 
 ```
-~/hashcat/hashcat.bin -O -w 4 -m 9600 ~/passlab/lab1a-word ~/words/rockyou.txt.gz
+~/hashcat/hashcat.bin -O -w 4 -m 9600 ~/passlab/lab1a-word ~/passlab/words/rockyou.txt.gz
 ```
 
 #### PDF Hashes
@@ -132,6 +132,7 @@ You can try this approach with other word lists as well. Check the ~/words/ dire
 There are many wordlists in available for download but it takes some strategy to pick the right one. Do you want to use actual leaked passwords? Or generated lists representing patterns? Or maybe phrases from songs? Or maybe names? Or words in languages other than English?
 
 #### Where can I get more wordlists?
+
 - John the Ripper's distribution comes with some
 - SecLists on GitHub
 - Crackstation
@@ -191,7 +192,7 @@ Other rules will add numbers, dates, or common puntuation to a word. Common patt
 To run a rule attack we use mode "0" and have to specify a rule file and a wordlist.
 
 ```
-~/hashcat/hashcat.bin -O -w 4 -m 1000 --username -a 0 -r ~/hashcat/rules/best64.rule lab2-ntlm ~/words/rockyou.txt.gz
+~/hashcat/hashcat.bin -O -w 4 -m 1000 --username -a 0 -r ~/hashcat/rules/best64.rule ~/passlab/lab2-ntlm ~/passlab/words/rockyou.txt.gz
 ```
 
 #### Rules that come with Hashcat
@@ -241,7 +242,7 @@ Hashcat comes with a pre-trained model, but we can train our own model if we hav
 The markov model simply creates mask patterns similar to what we saw in previous methods. It narrows down how many guesses we need to make. For short human created passwords, it is excellent and FAST. I usually try this up to 8 characters as a first or second attack. For long passwords or slow algorithms, other more advanced methods are better, but I will run this as my last attempt and let it run for a week or longer.
 
 ```
-~/hashcat/hashcat.bin -O -w 4 -m 1000 --username -a 3 lab2-ntlm
+~/hashcat/hashcat.bin -O -w 4 -m 1000 --username -a 3 ~/passlab/lab2-ntlm
 ```
 
 While this is running you can hit "b" for bypass to skip to the next pattern predicted by the Markov model. This is helpful for estimating how long each length of password will take to guess. 
@@ -272,7 +273,10 @@ You have obtained a large quantity of records of interest and they all check out
 You know the names of the files and some of the concerns Federate Dundas has noted.
 
 Files:
-- 
+- sub-rosa.docx 
+- obelisqe-numbered-companies.docx
+- jakarta-harbour-ecological-study.pdf
+- derivatives-over-time.xlsx
 
 Concerns:
 - Is the Jarkata Harbour deal sound? We've heard that the buildings are too tall, and block light to the neighboring harbour causing aquatic plants to die out and subsquently endangering the wildlife in the harbour. The deal is dead if ecological reports were faudulent, or misrepsented. Jack Larkin leads this deal, and Doland Darby is supporting him. (If you crack the passwords of Jack or Donald in a later challenge, this file is considered cracked)
@@ -293,6 +297,12 @@ You work for a forensics firm hired by the RCMP to recover the encrypted data so
 
 For this challenge you earn 100 points if you can crack Cedrics locked file.
 
+Files:
+- wealth-management-101.pdf
+- family-corporation-charity.pdf
+- investment-pool-2020.pdf
+- private-investment-fund-commission.pdf
+
 ### Challenge 3: Insider Information: Hacking the Market Makers
 You are a hacker hired by the Russian mafia. You are hired to modify documents created by famed stock market analyst Susanna Marks.
 
@@ -301,6 +311,16 @@ Susanna Marks is an analyst at Gardner Ross. She provides intelligence to the Tr
 This has attacted the attention of the Russian mafia. They approached her with a bride, asking that she promote a worthless stock they control. If she promoted the stock, people would buy it, and the mafia could make a fortune selling it before it crashes. She refused. Then the mafia threatened her family. The mafia took pictures of her young son at school with his Dudley the Dragon stuffed animal hoping to intimidate her. She still refused. Gardner Ross hired bodyguards from security firm Obelisque and stuck by Susanna.
 
 You must crack the password to Susanna's past and current analysis reports. If you can crack the most recent ones you can gain insight into which stocks she is promoting then the mafia can piggy back and make some quick cash. BUT if you can crack the unpublished report, you can alert it, and people will buy your junk stock, making your millions overnight and only Susanna will take the blame if regulators investigate.
+
+Files:
+- marks-jan-trends-confidential.docx
+- marks-feb-trends-confidential.docx
+- marks-mar-trends-confidential.docx
+- marks-apr-trends-confidential.docx
+- marks-may-trends-confidential.docx
+- marks-jun-trends-confidential.docx
+- marks-jul-trends-confidential.docx
+
 
 For this challenge you get points based on which documents you crack:
 - 10 points each for the first 5 reports of the year
@@ -312,6 +332,8 @@ For this challenge you get points based on which documents you crack:
 In preparation for the planned merge of Gardner Ross and Federated Dundass, Sally Ross wants to provide evidence that their IT security is excellent. You are a consultant for a firm hired to conduct an audit of the IT systems used to handle their financial dealings.
 
 Part of this audit involves assessing whether their passwords are strong enough. Their Active Directory GPO settings are currently good. But are the passwords really strong? 
+
+Use the file *challeng-ntlm* which contains the usernames and hashes from Garder Ross' Active Directory. These are in NTLM (-m 1000) format.
 
 You are given an extract of the NTLM hashes of all Active Directory passwords. You are most concerned about the password of privileged accounts: those with access to critical IT systems or senstive documents.
 
